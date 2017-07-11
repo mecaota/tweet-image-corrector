@@ -5,7 +5,7 @@
 
 ### 使用方法
 
-1.以下のjsonファイルをpulltweet.pyと同じディレクトリ内に作成してください。XXXXで始まる数値は各自任意の数字に書き換えて使用してください。
+1.以下のjsonファイルをpulltweet.pyと同じディレクトリ内に「_settings.json」という名前で作成してください。XXXXで始まる数値は各自任意の数字に書き換えて使用してください。
 ```json:_settings.json
 {
     "API_KEY": {

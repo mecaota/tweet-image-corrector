@@ -1,10 +1,11 @@
 #coding: UTF-8
 from requests_oauthlib import OAuth1Session
+from urllib.parse import urlparse
 import cv2
-import PIL
 import urllib
 import json
 import io
+import re
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -43,21 +44,33 @@ def imgDownload(url):
     if image is None:
         raise ValueError("'" + url +"'" + "はこのプログラムでは扱えないファイルです。このファイルはパスされます。")
         return None
-    image_gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    #reg = r"[\/\.{a-z}+\:orig$]"
+    filename = re.sub(r"[\/\.{a-z}+\:orig$]","",urlparse(url).path) #urlを解析してpath部分を抽出、正規表現でファイル名以外を削除
+    path = "sample/" + filename + ".png"
+    print(path)
+
+    #画像処理
+    image_gray = imageOptimize(image)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    cv2.imwrite('result.jpg', image_gray)
-    plt.imshow(image)
-    plt.show()
+    cv2.imwrite(path, image_gray)
+    #plt系は画像プレビューの為のやつ
+    #plt.imshow(image)
+    #plt.show()
     return 0
+
+def imageOptimize(image):
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    cv2.resize(image, (500, 500))
+    return image
 
 if __name__ == "__main__":
     settings = openJSON("_settings.json") #setting.JSON open
     api_keys = settings["API_KEY"] #APIkey
     parameter = settings["PARAMETER"] #twitterAPIパラメーター
     twitter = oauthTwitter(api_keys) #oauth認証にてツイッターオブジェクト生成
-    params = {"list_id":parameter["list_id"], "slug":parameter["user_id"], "include_entities":True, "count":40}
+    params = {"list_id":parameter["list_id"], "slug":parameter["user_id"], "include_entities":True, "count":200}
     timeline = getTweet(twitter, "lists/statuses", params)
     for tweet in timeline:
         if "extended_entities" in tweet and "media" in tweet["extended_entities"]:
             showTweetimg(tweet)
-            break
+            #break #画像1枚だけ拾いたいときコメントアウト
