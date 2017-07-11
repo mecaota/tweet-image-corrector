@@ -20,14 +20,9 @@ def oauthTwitter(api_keys):
 
 #指定したツイートを各種取得
 def getTweet(twitter, api, params):
-    apiurl = "https://api.twitter.com/1.1/" + api
-    print(params)
+    apiurl = "https://api.twitter.com/1.1/" + api + ".json"
     req = twitter.get(apiurl, params = params)
-    print(type(req))
-    print(req.txt)
-    print("jsonロード")
-    timeline = json.loads(req)
-    return timeline
+    return json.loads(req.text)
 
 #twitter画像読み込み
 def showTweetimg(tweet):
@@ -61,7 +56,7 @@ if __name__ == "__main__":
     parameter = settings["PARAMETER"] #twitterAPIパラメーター
     twitter = oauthTwitter(api_keys) #oauth認証にてツイッターオブジェクト生成
     params = {"list_id":parameter["list_id"], "slug":parameter["user_id"], "include_entities":True, "count":40}
-    timeline = getTweet(twitter, "lists/statuses.json", params)
+    timeline = getTweet(twitter, "lists/statuses", params)
     for tweet in timeline:
         if "extended_entities" in tweet and "media" in tweet["extended_entities"]:
             showTweetimg(tweet)
