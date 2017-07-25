@@ -3,6 +3,7 @@ from keras.models import Sequential
 from keras.layers.core import Dense, Activation
 from keras.utils import np_utils
 import numpy as np
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     # Kerasに含まれるMNISTデータの取得
@@ -39,8 +40,34 @@ if __name__ == "__main__":
     model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
     
     # 学習処理の実行
-    model.fit(X_train, y_train, batch_size=200, verbose=1, epochs=20, validation_split=0.1)
+    hist = model.fit(X_train, y_train, batch_size=200, verbose=1, epochs=20, validation_split=0.1)
     
     # 予測
     score = model.evaluate(X_test, y_test, verbose=1)
     print('test accuracy : ', score[1])
+
+
+    ### 学習結果のグラフ化
+    loss = hist.history['loss']
+    val_loss = hist.history['val_loss']
+    
+    # lossのグラフ
+    plt.plot(range(20), loss, marker='.', label='loss')
+    plt.plot(range(20), val_loss, marker='.', label='val_loss')
+    plt.legend(loc='best', fontsize=10)
+    plt.grid()
+    plt.xlabel('epoch')
+    plt.ylabel('loss')
+    plt.show()
+    
+    acc = hist.history['acc']
+    val_acc = hist.history['val_acc']
+    
+    # accuracyのグラフ
+    plt.plot(range(20), acc, marker='.', label='acc')
+    plt.plot(range(20), val_acc, marker='.', label='val_acc')
+    plt.legend(loc='best', fontsize=10)
+    plt.grid()
+    plt.xlabel('epoch')
+    plt.ylabel('acc')
+    plt.show()
