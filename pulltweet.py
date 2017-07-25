@@ -50,16 +50,16 @@ def imgDownload(url):
     print(path)
 
     #画像処理
-    image_gray = imageOptimize(image)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    cv2.imwrite(path, image_gray)
-    #plt系は画像プレビューの為のやつ
+    optimage = imageOptimize(image)
+    cv2.imwrite(path, optimage)
+    #画像プレビュー
+    #image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     #plt.imshow(image)
     #plt.show()
     return 0
 
 def imageOptimize(image):
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    #image = cv2.cvtColor(image)
     cv2.resize(image, (500, 500))
     return image
 
